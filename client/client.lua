@@ -30,24 +30,6 @@ local notify = function(message, type)
         print(_U('invalid_notification'))
     end
 end
-if cfg.notifys == 'lation_ui' then
-RegisterNetEvent('Lationnotyfy', function( message,label,icon,color)
-    
-    exports.lation_ui:notify({ 
-            title = label,
-            message = message,
-            type = "info",
-            icon = icon,
-            bgColor = color,
-    position = 'top',
-
-        })
-    
-
-
-end)
-end
-
 
 function checkifboss(job)
     if QBCore then
@@ -115,28 +97,20 @@ end
 function OpenDialog(job)
     if cfg.menu == "ox_lib" then
 
-
- local result = lib.inputDialog(_U('job_messages_title'), {
-  {type = 'input', label = _U('job_message_label'), placeholder = _U('job_message_placeholder'), required = true}
- 
-})
-
-
+    local result = lib.inputDialog(_U('job_messages_title'), {
+        {type = 'input', label = _U('job_message_label'), placeholder = _U('job_message_placeholder'), required = true}   
+    })
     if result then
-        TriggerServerEvent('sendjobnotify', -1,result[1],cfg.job[job])
+        TriggerServerEvent('sendjobnotify',result[1],cfg.job[job],job)
     else
         notify(_U('no_message_entered'), "error")
         return
     end
 
-
-
-
     elseif cfg.menu == "lation_ui" then
 
+    local result = exports.lation_ui:input({
 
-
-local result = exports.lation_ui:input({
     title = _U('job_messages_title'),
     subtitle = "",
     submitText = _U('submit_text'),
@@ -149,18 +123,16 @@ local result = exports.lation_ui:input({
             required = true
         },
     }
-})
-    
-    
 
+    })
     if result then
-        TriggerServerEvent('sendjobnotify', -1,result[1],cfg.job[job])
+        TriggerServerEvent('sendjobnotify', -1,result[1],cfg.job[job],job)
     else
         notify(_U('no_message_entered'), "error")
         return
     end
 
-end
+    end
 end
 
 if cfg.usecommand then
@@ -173,10 +145,7 @@ if cfg.usecommand then
         local Player = QBCore.Functions.GetPlayerData()
         job = Player.job.name
         end
-
-    checkcanuseit(job)
-
-
+        checkcanuseit(job)
     end, false)
 end     
 
@@ -196,3 +165,5 @@ if cfg.export then
 
     end)
 end     
+
+
